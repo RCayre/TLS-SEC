@@ -1,3 +1,26 @@
 GDTR : table globale (kernel) référençant les descripteurs de segments
 LDTR : table locale (apps) référençant les descripteurs de segments
 
+
+Pagination : 
+quand on fait un malloc  : 
+x = malloc(10)
+
+
+la MMU (memory management unit) servira à mettre en place la correspondance adresse physique/adresse virtuelle
+
+espace d'adressage : va donner l'impression à chaque application qu'elle utilise toute la RAM
+
+	___Firefox____                  ____Chrome___
+       0|  |     |lib|4Go	       0| |      |lib|4Go
+	''''''''''''''                  '''''''''''''
+	|  \	   \\			/  \	//
+	|   \ 	    \\		       /    \  //
+	|    \       \\        =================
+	|     \_ ,    \\      //      /       |
+	|--------|-----|--------|----|--------|-|
+	|firefox |     | libxml |    | Chrome | |
+	|--------|-----|--------|----|------- |-|
+			    ^
+			partagé
+	
