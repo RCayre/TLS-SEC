@@ -1,0 +1,3 @@
+1) Le programme s'auto réplique dans les fichiers sh présents dans le répertoire courant (sélectionne ses 5 dernières lignes et si il ne s'agit pas de lui même, se concatène à la fin du .sh)
+2) Infection par ajout de code
+

@@ -1,0 +1,49 @@
+www.formaestudio.com/rijndaelinspector/archivos/Rijndael_Animation_v4_eng.swf
+
+S-box : substitutions, correspondances stockées dans une table
+ShiftRows (rotation des lignes)
+MixColumns (permutation) : multiplier chaque colonne par une matrice carrée sans éléments nuls -> permet de répercuter la modif. de l'étape précédente en modifiant tout (petit changement provoque un gros changement)
+https://fr.wikipedia.org/wiki/Jeu_d'instructions_AES
+
+						|5e|    1 2   |6f|   1 2
+1a 2b		  5e 6f 		5e 6f	|81|  * 3 4 . |81| * 3 4	
+3c 4d ---S-box -> 70 81 --ShiftRows-->  81 70 --------MixColumns--------->
+
+
+2 types d'attaques en cryptographie : cyphertext only  =>  (l'attaquant ne dispose que de chiffrés)
+				      chosen plaintext =>  (l'attaquant dispose de pair clair/chiffré de son choix) 
+
+Une attaque à clair choisi doit avoir une complexité de l'ordre de 2 ^ k, sinon cassé (mais bon, au delà de 2 ^ 100, c'est en pratique compliqué pour l'attaquant ...)
+
+RÈGLE : jamais autoriser un attaquant à chercher un morceau de secret
+
+Double DES : il a un clair et un chiffré
+
+C --DES(C,K)--> {(M1,K1),(M2,K2),...} 2^56 couples possibles
+C --DES-1(C,K) -->{(M'1,K'1),...} 2^56 couples possibles
+
+Élément commun U = DES(Ca,Ka) = DES-1(Mb,Kb) => meet in the middle
+attention collisions : plusieurs couples possibles, vérifier
+
+liste = sortedlist()
+for k2 in range(0,(2^56)-1):
+	cprime = DEC(k2,m)
+	liste.insert({tprime,k2})
+
+for k1 in range(0,2^56):
+	if (k2 = liste.indexOf(ENC(c,k1)) != -1):
+		if (testerCandidat(k1,k2)):
+			return (k1,k2)
+
+AES : standard actuel
+plusieurs modes : electronic code book => toujours la même permutation car même clair = même chiffré
+
+00000000 -> 10101010   
+00000000 -> 10101010
+
+Pas sûr du tout (sauf si un chiffrait directement de l'Aléa) !  
+Mode CBC  :
+Alice envoie à Bob un vecteur d'initialisation (aléa)
+Le bloc donné à l'algorithme est certain que ca n'a jamais été initialisé avant (pas très clair, à documenter)
+
+Un truc aléatoire XOR clé = un autre truc aléatoire

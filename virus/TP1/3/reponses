@@ -1,0 +1,11 @@
+1) Réplication du virus par ajout de code à la fin des fichiers sh
+2) Il s'agit d'une archive zip
+	$ tail -n 10 vbash3.sh | uudecode -o /tmp/plop.z
+	$ file /tmp/plop.z 
+	/tmp/plop.z: Zip archive data, at least v3.0 to extract 
+
+3) Le mot de passe est la sortie de la commande date +%u, il s'agit de 3 
+L'insertion se fait par le script contenu dans l'archive
+
+4) Ce code se réplique dans tout les fichiers sh qu'il rencontre, en stockant le code de déchiffrement et une représentation ASCII de l'archive plop.z
+L'archive est modifiée, son code binaire est différent d'une exécution à l'autre = polymorphe, par ajout de code

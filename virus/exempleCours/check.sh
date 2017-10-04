@@ -1,0 +1,8 @@
+for i in *.sh; do
+	for j in $(tail -n 5 $i); do
+		a="$a$j";
+	done
+	if test $(cat $a) -eq "foriin*.sh;doiftest\"./$i\"!=\"$0\";thentail-n5$0>>$i;fidone";then
+		echo "$i : INFECTED"
+	fi
+done

