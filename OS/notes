@@ -1,0 +1,3 @@
+GDTR : table globale (kernel) référençant les descripteurs de segments
+LDTR : table locale (apps) référençant les descripteurs de segments
+
