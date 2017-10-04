@@ -23,4 +23,20 @@ espace d'adressage : va donner l'impression à chaque application qu'elle utilis
 	|--------|-----|--------|----|------- |-|
 			    ^
 			partagé
+
+Très bien pour des zones de mémoires multiprocess, partagées, libs ...
+Les tables de pages permettent de faire la correspondance @virtuelle/@réelle
+
+CR3 (registre de contrôle 3) contient l'adresse du PageDirectory (1024 entrées de 4 octets chacunes, donc 4Ko)
+Chaque entrée référence une autre table, PageTable, qui a aussi 1024 entrées qui chacunes font 4 octets, ce qui nous donne 4Ko)
+Chaque entrée de la table de page définit une PageTableEntry, qui est une valeur sur 4 octets qui code une partie de config et une adresse physique de page de 4Ko.
+
+Chaque adresse virtuelle fait 32 bits et est découpée en 3 parties :
+
+[       10 bits        |      10 bits        |         12 bits     ]
+(index page directory)  (index page table)    (offset dans la page)
+ ^ 10 = 1024 entrées    2 ^ 10 = 1024 entrées  2 ^ 12 = 4096 (4Ko)
+
+Bit U/S (User/Superviser) : 1 = User (Ring 3), 0 = Superviseur (Ring 0,1 ou 2)
+Bit R/W (Read/Write) : seul 2 valeur, appauvrissement par rapport à la segmentation
 	
