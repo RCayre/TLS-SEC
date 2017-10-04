@@ -40,3 +40,32 @@ Chaque adresse virtuelle fait 32 bits et est découpée en 3 parties :
 Bit U/S (User/Superviser) : 1 = User (Ring 3), 0 = Superviseur (Ring 0,1 ou 2)
 Bit R/W (Read/Write) : seul 2 valeur, appauvrissement par rapport à la segmentation
 	
+TLB (Translation Lookaside Buffers) : "cache" pour retenir les correspondances (éviter la retraduction)
+
+Sous linux : (adressage virtuel)
+
+0go__________________________3go___________4go
+[	U=1 (user)            |U=0(kernel)   ]
+''''''''''''''''''''''''''''''''''''''''''''''
+
+Sous windows, plutôt 2 go
+Quand une application s'exécute, elle va devoir faire des appels systèmes et donc accéder à la mémoire du noyau (pas n'importe comment), donc logique que la mémoire du noyau soit mappée aussi dans la mémoire du processus.
+
+Dans chaque application, les dernières entrées du PageDirectory correspondront donc aux pages du noyau
+
+Ca aurait du sens que le bit G soit à 1 pour les pages du kernel
+Sous linux, adresse virtuelle au delà de 3 go (dans l'espace noyau) codé à partir de l'adresse 0 en RAM (donc on peut faire la correspondance physique (à partir de CR3 par ex) => virtuelle rapidement) ==> Utilisé pour accéder aux adresses virtuelles des tables de page par ex
+
+ON PEUT MODIFIER LE PAGE DIRECTORY LUI MÊME
+
+Si on met à la première adresse du page directory l'adresse du page directory lui même
+			______
+		00 ____/___   |
+00000000 -------> |   v  __|__|
+		  |________|
+		  |	   |
+		  |________|
+		  |  ...   |
+
+
+Juste à mettre un offset pour modifier les autres cases
