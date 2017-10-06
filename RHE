@@ -1,0 +1,73 @@
+RHE
+
+Attaques niveau 3/4 :
+Fragmentation IP : jouer avec pour contourner des firewalls, effectuer des actions interdites sans détection par l'IDS
+Peut servir également en DOS (saturation de mémoire) ou exploitation de faille
+https://hackademics.fr/forum/hacking-connaissances-avanc%C3%A9es/autres-ab/1205-attaques-par-fragmentation
+
+On veut transmettre un paquet IP qui fait 65535 octets 
+Max Transm. Unit ~ 1500 octets
+Donc forcément, il sera fragmenté (découpé)
+
+BIT MF (More Fragments) à 1 : on précise que ce n'est qu'un fragment
+
+[IP Header|TCP Header|Data ...                      ]
+	  0               	i
+[IP Header|TCP Header|Data...   ]			(MF=1,Offset=0)
+	        		[IP Header|Data ... ]   (MF=0,Offset=i/8)
+ 
+
+Série de 13 bits (Offset) permet de savoir l'ordre des fragments (offset plutôt que numérotation car si il y a une autre fragmentation plus petite, il faut savoir où placer les nouveaux fragments)
+
+Le dernier fragment a le bit MF à 0
+Chaque paquet a un identifiant qui permet de récupérer paquet
+
+En cas de perte, découpage dans une autre taille possible
+
+Seul le destinataire doit reconstruire le paquet
+
+Attaque : 
+Superposition :
+j'envoie un premier paquet fragmenté (MF=1, Offset=0), uniquement le 1er fragment avec une entête légitime
+le firewall laisse passer car entête OK
+j'envoie un autre paquet entier, avec (MF=0 et Offset=1) et une autre entête TCP non légitime, la stratégie de reconstruction va écraser le 1er set de données reçu et reconstruire le paquet avec l'entête TCP non légitime
+
+Microfragmentation : 
+envoyer un paquet tellement fragmenté en petit qu'il ne sera pas analysé correctement
+
+Plusieurs reconstructions de fragment :First (windows, macos, sun)
+				       Last (cisco)
+				       Last complete (Linux) -> le premier qui permet de compléter linéairement
+				       Last complete à partir de la fin (BSD, wireshark ...)
+
+
+Usurpation d'adresse IP : forger des paquets avec une adresse ne correspondant pas à celle de l'émetteur
+contournement des moyens d'authentification/autorisation, éviter le traçage
+
+egress (externe) ingress (interne) permettent de faire une contremesure minimale, ne router que les paquets qui ont des IPs qui correspondent à leurs réseaux
+
+ICMP , UDP, DNS  : aucun problème pour usurper l'@ip source
+TCP : soucis, état global de la communication fait qu'il y a une notion d'ordre, des données acquittées, etc ... des réponses risquent de générer des rst, dur d'injecter du trafic (à cause des numéros de séquences) ...
+
+Initier une connection TCP avec une fausse ip source, difficile car :
+envoi d'un SYN par l'attaquant
+envoi d'un ACK par le serveur à la machine cible
+2 soucis : renvoi d'un RST par la machine cible au serveur
+	   numéro de séquence à deviner pour l'attaquant
+
+Kevin Mitnick
+
+      ____________1) SYN FLOOD_(DOS)____
+     /					\
+    /					 \___
+   __	     2) SYN	  __      3) SYN/ACK |__  
+  [__]   ------------->  [__] -------------> [__] 
+ /====\	--------------> /====\		    /====\
+ ''''''	     4)	ACK   > ''''''		    ''''''
+Attaquant	     /	Cible                Tier (la cible lui fait confiance)
+    \_______________/
+   5) One packet Attack
+
+
+
+

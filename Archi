@@ -1,0 +1,59 @@
+PVLAN : isole l'attaquant au niveau 2 = empêche les attaques niveau < 3
+VLAN : défini par plages IP
+	-> même VLAN : on communique au niveau 2
+	-> != VLAN : on envoie au routeur qui accepte ou non de faire 
+
+Un firewall Stateless qui interdirait les paquets SYN entrants ... n'empêcherais pas un scan par SYN-ACK !!!! les cibles vont répondre avec un RST et l'attaquant saura si la cible est up ou non. L'attaquant n'est pas obligé de respecter les protocoles /!\
+
+
+LA DIFFÉRENCE ENTRE CE QU'ON PENSE ET CE QU'ON ÉCRIT (QUAND UN LANGAGE EST PAUVRE, LOIN DE L'EXPRESSION DE SES BESOINS = DANGER)
+
+Source (ou destination) d'un paquet IP :
+protocole   ~|
+IP source     } Attention, 3 infos définissent la source d'un paquet IP
+num de port _|
+
+ICMP  : Adresse source
+
+Firefox Stateful : j'autorise les NEW et puis ensuite ce qui suit (tout le reste interdit)
+-> invalide : je rejette
+Stateful permet de retenir le passé (il a une mémoire), donc il peut vérifier que les paquets respectent les protocoles
+
+J'interdis tout, sauf qu'il y ait une suite à ce que j'ai déjà autorisé (l'initiation d'une connexion par exemple)
+
+Firewall applicatif : si jamais FTP par exemple, on est obligé d'introspecter les paquets FTP
+en effet, FTP => TCP canal de contrôle => UDP commandes et fichiers
+Lire du FTP  = Lire du niveau 7 donc obligé d'avoir un firewall applicatif
+
+Bittorrent idem
+UPNP = alternative au filtrage applicatif, on peut depuis l'intérieur du réseau configurer le firewall (évidemment, si le client est autorisé à définir sa politique d'ouverture/fermeture des firewall, en gros, à la maison quoi)
+Règles hyper complexe : 'pas de javascript dans des tweet'
+
+WAF : domaine web, firewall applicatif web
+Routeur filtrant, qui regarde l'applicatif != serveur mandataire, proxy
+
+Firewall personnel : contrôle les entrées/sorties de l'ordinateur
+ACL : access control list 
+Ne pas laisser les apps modifier les règles, passoire /!\
+Sert à pas grand chose
+
+
+Possible de flouer un firewall en cachant du trafic HTTP dans du trafic ICMP ou DNS, ... Danger si l'attaquant possède une machine dedant et un serveur dehors, si il peut se connecter à n'importe quel machine dehors
+Seul solution : whitelist pour empêcher l'attaquant de se connecter à son serveur
+
+					serveur web proxy
+	----------- 80		     80	-----------
+	|interieur|---->/''''''''\----> |exterieur|---->(autre service)
+	|	  |<--- |firewall|<---- |	  | <---/
+	/---------\	\......../      /---------\
+       /'''''''''''\	http only      /'''''''''''\
+       '''''''''''''		       '''''''''''''
+
+Si y a pas de liste blanche en sortie, un attaquant en sortie sort ce qu'il veut
+
+Les risques augmentent avec la complexité
+Le proxy corrige certains défauts des firewall
+mais plus complexe, donc plus faillible
+Un proxy = qu'est ce qu'il se passe si il tombe ?
+
+Élément complexe = toujours une autre protection derrière
