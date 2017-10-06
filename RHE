@@ -69,5 +69,14 @@ Attaquant	     /	Cible                Tier (la cible lui fait confiance)
    5) One packet Attack
 
 
+De nos jours : Découverte du réseau / services / connexions
+		Cartographie
+		Prédiction des numéros de séquences : nmap, fingerprint OS puis recherche internet
+		
+
+Vol de session TCP
+On doit être en local en train de sniffer au moins, pour récupérer les numéros de sequence
+Arriver à "désynchroniser" Bob et Alice. Ils sont hors fenêtre (décalage dans les numéros de séquence)
+Et nous on va faire la traduction
 
 
