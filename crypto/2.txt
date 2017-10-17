@@ -47,3 +47,84 @@ Alice envoie à Bob un vecteur d'initialisation (aléa)
 Le bloc donné à l'algorithme est certain que ca n'a jamais été initialisé avant (pas très clair, à documenter)
 
 Un truc aléatoire XOR clé = un autre truc aléatoire
+
+Permutation pseudo aléatoire : famille de fonction car paramètre supplémentaire pour définir le chiffrement - taille de clé par exemple
+=> permutation pour un secret donné
+2 ^ 128 clés = 2 ^ 128 permutations ( ? )
+
+choix au hasard uniforme d'une clé = indistinguable du choix d'une permutation complètement aléatoire
+Pour un niveau de sécurité donné, je regarde une famille de permutation
+Pour Pi choisi, on ne peut pas savoir si on a construit une toute nouvelle permutation en tirant chaque image au hasard
+On peut pas se permettre de tirer au hasard exhaustivement chaque permutation : trop coûteux
+donc forcément on est moins sécurisé puisque l'image dépend de l'antécédent : on cherche à rendre ce lien invisible
+
+Probabilité de réussite en tirant au hasard une permutation : (1/2)+(1/2^128)
+
+Pour AES2, on teste les 4 possibilités
+
+Pour attaquer AESn, j'ai une attaque exploitable, mais en 2^n
+Coût exponentiel dans le paramètre de sécurité
+
+"Est ce que ma fonction est intrinséquement pas sûre ou j'ai simplement un paramètre trop bas"
+
+RSA : attaques moins qu'exponentielle, pas bon
+Ce qu'on ne veut pas : qu'un attaquant ait une attaque exploitable en un temps polynomial
+Car si on augmente le niveau de sécurité pour rendre son attaque infaisable, alors on rend le système de cryptage inutilisable !
+
+/!\ Attention : quand les entrées sont des nombres, bien se souvenir qu'on ne s'intéresse qu'à leur nombre de bits
+
+Rappel : 2 ^ (log n) = n 
+        on cherche en  n ^ a et surtout pas des log en exposants
+
+(1)
+(3)
+(5) : algo squarequelque chose
+
+Une fonction est négligeable si, en valeur absolue, elle est toujours en dessous d'un polynôme
+Si un attaquant obtient des avantages de ce type, on s'en fout
+asymptotiquement : on ne s'intéresse pas aux petites valeurs du paramètres
+
+en théorie, asymptotique, en pratique, il ne faut pas que ça explose le coût de l'algo de chiffrement
+
+a^n = 2 ^ log a n
+
+(1) : fonctions quasi exponentielles < polynôme
+(2) : un polynôme ne peut pas passer en dessous pour tout polynôme
+(3) : fonction exponentielle, va devenir plus grande que tout polynôme
+
+Si l'avantage de l'attaque est non négligeable l'algo est exploitable
+La réponse a
+
+1/(2^n)
+
+on explore n^10 clé différentes dans un espace de 2^n
+
+2^n/2 / 2^n
+
+Phénomène d'amplification
+Quand on utilise un distingueur un nombre linéaire de fois, l'avantage va être multiplié exponentiellement
+Si l'avantage est exponentiellement petit, pas vrai
+Si l'avantage est polynomial, pas vrai
+
+Algo A : 1/2 + (1/n^3)
+
+Notion de réduction  : Algo B, j'utilise plusieurs fois A et j'obtiens un avantage très proche de 1
+
+Si B exécute 2 fois A, et il fait un choix par majorité
+Si A répond 2 fois la même chose, B sort même chose que A
+Si A répond 2 choses différentes, B tire au hasard parmi les sorties de A
+
+P[A1 = b] = 1/2 + 1/(n³)
+
+P[succès] = P[A réussit 2] * P[A réussit 1] + 1/2 * (2* P[A rate 1] * P[A rate 2])
+          = (1/2 + e)² + (1/2 + e) * (1/2 - e) = (1/2 + e)² + (1/4 + e
+
+Amplification : Si le nombre de test est supérieur à la probabilité , notamment si un algo me donne un avantage 1/2 + e avec e qui est un polynôme en n
+Alors si je fais ce test et que je l'appelle n * 1/e fois, j'ai une proba très proche de 1 de réussir
+
+Un phénomène ayant une probabilité p, répété n * 1/p fois au moins, voit formation d'un biais
+
+Entre 2^55 et 2^85 (k=55 à 85) (et évidemment, en dessous)
+Pour toute application qui doivent tenir 10 ans, il vaut mieux k=128 pour parer aux évolutions des attaques et des machines
+Pour toute application qui doivent tenir 20 ans, il vaut mieux k=256 pour parer aux évolutions des attaques et des machines
+

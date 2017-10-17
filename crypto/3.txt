@@ -1,0 +1,76 @@
+Paradoxe des anniversaires:
+On associe à chaque étudiant i sa date d'anniversaire di
+i choisi au hasard, di choisi au hasard
+i est compris entre 1 et N étudiants
+collision si i et j différents tels que di = dj
+
+N étudiants possibles pour i
+N-1 étudiants possibles pour j
+
+on va considérer de l'ordre de N² couples
+
+1 personne entre dans la salle : probabilité = 0
+2 personnes dans la salle : 1 / 365
+3 personnes dans la salle : 2 / 365
+...
+N personnes dans la salle : N-1 / 365
+
+Probabilité que tout le monde ait un anniversaire différent (pas de collisions):
+~ (1 - (1/365))(1-(2/365))(1-(N-1 / 365))
+
+http://www.bibmath.net/crypto/index.php?action=affiche&quoi=chasseur/anniversaire
+
+La somme de 1 à x est de l'ordre de x²
+
+/!\ Attention : sens des mots ambigu
+Résistance faible aux collisions : c'est "facile" de résister aux collisions
+Résistance forte aux collisions : propriété de sécurité difficile à maintenir
+
+
+Construction classique d'une fonction de hachage :
+Construction de Merkle Damgärd
+
+			Message bloc 1   Message bloc 2	     Message bloc n
+			     |		      |			  |
+			     v		      v			  v
+Vecteur d'initialisation --> f -------------> f --------...-----> f --> Hash
+
+Toutes les fonctions de hachage fonctionnent comme ça, sauf SHA-3
+
+Fonction de hachage généralement plus lente qu'une fonction de chiffrement, car 50 à 100 tours
+
+Les fonctions à connaître : SHA 0,1,2,3
+			    MD5, MD2, MD4,RIPEMD, Whirlpool
+
+M : message, d : nombre de bits
+
+Les utilisations : 
+Vérification d'intégrité (téléchargement d'un logiciel par exemple)
+Stockage de mots de passe
+	Enregistrement du password : "hello" ----> hash fct ----> 5d41402abc4b2a76b9719d911017c592
+	Vérification du password : "wrong" ------> hash fct ----> 2bda2998d9b0ee197da142a0447f6725 ====comparaison=avec==> 5d41402abc4b2a76b9719d911017c592
+
+	=> Types de mdp : loweralpha-numeric / mixalpha-numeric / ascii-32-95
+
+15 bits d'entropie ~ faire 2¹⁵ test pour le trouver
+
+Attaque par bruteforce, dictionnaire ou rainbow table : https://en.wikipedia.org/wiki/Rainbow_table
+Stocker un salt pour éviter les attaques par précalcul
+
+Fonctions de hachage par renforcement : lente
+pas grave si on doit l'exécuter 1 fois légitimement, mais explose le temps d'attaque
+
+
+Exercice :
+Engagements
+
+se mettre d'accord sur un aléa
+Alice : alea1 <= {0,1}^k, Alice to bob : alea1
+Bob : alea2 <= {0,1}^k, Bob to alice : alea2
+Qui peut tricher ? 
+Comment le réparer ? 
+
+Tirer à pile ou face électroniquement
+Enchère aveugle sans tiers de confiance
+			  
+
